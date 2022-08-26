@@ -76,6 +76,10 @@ server.listen({ port: 8080, path: '/ws' });
     <td colspan=2>TCP</td>
   </tr>
   <tr>
+    <td>Serializer</td>
+    <td colspan=2>SimpleSerializer</td>
+  </tr>
+  <tr>
     <td>Web Support</td>
     <td>✅</td>
     <td>❌</td>
@@ -84,9 +88,5 @@ server.listen({ port: 8080, path: '/ws' });
     <td>Java Socket support</td>
     <td>❌</td>
     <td>✅</td>
-  </tr>
-  <tr>
-    <td>Serializer</td>
-    <td colspan=2>SimpleSerializer</td>
   </tr>
 </table>
