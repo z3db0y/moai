@@ -77,7 +77,7 @@ server.listen({ port: 8080, path: '/ws' });
   </tr>
   <tr>
     <td>Serializer</td>
-    <td colspan=2>SimpleSerializer</td>
+    <td colspan=2><a href="https://gist.github.com/z3db0y/dc56095b44436488c6c1448fcb54ac9d">SimpleSerializer</a></td>
   </tr>
   <tr>
     <td>Web Support</td>
