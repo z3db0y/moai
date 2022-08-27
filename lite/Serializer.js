@@ -11,22 +11,22 @@ class Serializer {
 
     static encode(data) {
         let dataType = 0x0;
-        switch(typeof data) {
+        switch (typeof data) {
             case 'number':
                 //if(Number.isSafeInteger(data)) dataType = Serializer.DATA_TYPES.INT;
                 //else dataType = Serializer.DATA_TYPES.DOUBLE;
-		dataType = Serializer.DATA_TYPES.NUMBER;
+                dataType = Serializer.DATA_TYPES.NUMBER;
                 break;
             case 'string':
                 dataType = 0x3;
                 break;
             case 'boolean':
-                if(data) dataType = Serializer.DATA_TYPES.TRUE;
+                if (data) dataType = Serializer.DATA_TYPES.TRUE;
                 else dataType = Serializer.DATA_TYPES.FALSE;
                 break;
             case 'object':
-                if(Array.isArray(data)) dataType = Serializer.DATA_TYPES.ARRAY;
-		else if(data) dataType = Serializer.DATA_TYPES.OBJECT;
+                if (Array.isArray(data)) dataType = Serializer.DATA_TYPES.ARRAY;
+                else if (data) dataType = Serializer.DATA_TYPES.OBJECT;
                 break;
             case 'function':
                 throw new Error('Unable to serialize function.');
@@ -36,7 +36,7 @@ class Serializer {
                 break;
         }
 
-        switch(dataType) {
+        switch (dataType) {
             case 0x0:
                 return new ArrayBuffer(1);
             case 0x1:
@@ -55,14 +55,14 @@ class Serializer {
             case 0x4:
                 var buf = new ArrayBuffer(9);
                 var view = new Uint8Array(buf);
-		view[0] = 0x4;
+                view[0] = 0x4;
                 var buf2 = new Float64Array([data]).buffer;
-		view.set(new Uint8Array(buf2), 1);
+                view.set(new Uint8Array(buf2), 1);
                 return buf;
             case 0x5:
                 var buf = new ArrayBuffer(1);
                 new Uint8Array(buf)[0] = 0x5;
-                for(var el of data) {
+                for (var el of data) {
                     var enc = Serializer.encode(el);
                     var newBuf = new ArrayBuffer(buf.byteLength + enc.byteLength);
 
@@ -80,7 +80,7 @@ class Serializer {
             case 0x6:
                 var buf = new ArrayBuffer(1);
                 new Uint8Array(buf)[0] = 0x6;
-                for(var k in data) {
+                for (var k in data) {
                     var ke = Serializer.encode(k);
                     var ve = Serializer.encode(data[k]);
 
@@ -100,11 +100,11 @@ class Serializer {
     }
 
     static decode(data) {
-        if(!(data instanceof ArrayBuffer)) throw new Error('data must be an instance of ArrayBuffer');
-	let view = new Uint8Array(data);
+        if (!(data instanceof ArrayBuffer)) throw new Error('data must be an instance of ArrayBuffer');
+        let view = new Uint8Array(data);
 
         function findLen(v) {
-            switch(v[0]) {
+            switch (v[0]) {
                 case 0x0:
                 case 0x1:
                 case 0x2:
@@ -117,7 +117,7 @@ class Serializer {
             }
         }
 
-	switch(view[0]) {
+        switch (view[0]) {
             case 0x0: return null;
             case 0x1: return true;
             case 0x2: return false;
@@ -125,35 +125,35 @@ class Serializer {
             case 0x4: return new Float64Array(data.slice(1))[0];
             case 0x5:
                 // TODO: implement array decoding.
-		view = view.slice(1, -1);
+                view = view.slice(1, -1);
                 var decoded = [];
-		while(view.byteLength > 0) {
+                while (view.byteLength > 0) {
                     var len = findLen(view);
                     var el = view.slice(0, len).buffer;
                     view = view.slice(len);
 
                     decoded.push(Serializer.decode(el));
-		}
+                }
                 return decoded;
             case 0x6:
                 // TODO: implement object decoding.
-		view = view.slice(1, -1);
+                view = view.slice(1, -1);
                 var decoded = {};
-		var pendingKey;
-		while(view.byteLength > 0) {
-		    var len = findLen(view);                                          var el = view.slice(0, len).buffer;                               view = view.slice(len);
+                var pendingKey;
+                while (view.byteLength > 0) {
+                    var len = findLen(view); var el = view.slice(0, len).buffer; view = view.slice(len);
 
-		    if(pendingKey) {
-			decoded[pendingKey] = Serializer.decode(el);
-			pendingKey = null;
-		    } else {
-			pendingKey = Serializer.decode(el);
-		    }
-		}
+                    if (pendingKey) {
+                        decoded[pendingKey] = Serializer.decode(el);
+                        pendingKey = null;
+                    } else {
+                        pendingKey = Serializer.decode(el);
+                    }
+                }
                 return decoded;
         }
     }
 }
 
-if(typeof window !== 'undefined') window.Serializer = Serializer;
+if (typeof window !== 'undefined') window.Serializer = Serializer;
 else module.exports = Serializer;

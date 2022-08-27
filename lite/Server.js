@@ -14,7 +14,11 @@ class ServerClient extends EventEmitter {
 		this.#socket = socket;
 		socket.on('data', data => {
 			data = new Uint8Array(data).buffer;
-			this.emit('packet', Serializer.decode(data));
+			try {
+				this.emit('packet', Serializer.decode(data));
+			} catch(err) {
+				this.#socket.destroy();
+			}
 		});
 		socket.on('close', () => {
 			this.emit('disconnect');
