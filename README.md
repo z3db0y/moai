@@ -82,10 +82,10 @@ server.listen({ port: 8080, path: '/ws' });
   <tr>
     <td>Web Support</td>
     <td>✅</td>
-    <td>❌</td>
+    <td>Requires custom solution</td>
   </tr>
   <tr>
-    <td>Java Socket support</td>
+    <td>Raw TCP Socket support</td>
     <td>❌</td>
     <td>✅</td>
   </tr>
