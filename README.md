@@ -90,3 +90,7 @@ server.listen({ port: 8080, path: '/ws' });
     <td>✅</td>
   </tr>
 </table>
+
+### Download (latest):
+- [**`lite.zip`**](https://github.com/z3db0y/moai/releases/latest/download/lite.zip)
+- [**`web.zip`**](https://github.com/z3db0y/moai/releases/latest/download/web.zip)
